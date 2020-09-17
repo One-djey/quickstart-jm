@@ -1,0 +1,10 @@
+html
+  head
+    title= title
+    script(src='https://cdn.plaid.com/link/v2/stable/link-initialize.js')
+  body
+    p your link token is
+      strong #{linkToken}
+    button(id="link-button") Link Account
+    script
+      include scripts/createItem.js

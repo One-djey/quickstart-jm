@@ -1,0 +1,10 @@
+html
+  head
+    title= title
+  body
+    form(action="/api/create_link_token" method="post")
+      h1= message
+      button(type='submit') Start
+      button(id="link-button") Link Account
+      script
+        include scripts/createItem.js

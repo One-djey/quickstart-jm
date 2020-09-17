@@ -9,8 +9,8 @@ var moment = require('moment');
 var plaid = require('plaid');
 
 var APP_PORT = envvar.number('APP_PORT', 8000);
-var PLAID_CLIENT_ID = envvar.string('PLAID_CLIENT_ID');
-var PLAID_SECRET = envvar.string('PLAID_SECRET');
+var PLAID_CLIENT_ID = envvar.string('PLAID_CLIENT_ID', "5f638d58adf86d0012cec8c9");
+var PLAID_SECRET = envvar.string('PLAID_SECRET', 'a280dcdc20dba4c0f1ad4ba42bbc5b');
 var PLAID_ENV = envvar.string('PLAID_ENV', 'sandbox');
 // PLAID_PRODUCTS is a comma-separated list of products to use when initializing
 // Link. Note that this list must contain 'assets' in order for the app to be
@@ -19,7 +19,7 @@ var PLAID_PRODUCTS = envvar.string('PLAID_PRODUCTS', 'transactions').split(',');
 
 // PLAID_PRODUCTS is a comma-separated list of countries for which users
 // will be able to select institutions from.
-var PLAID_COUNTRY_CODES = envvar.string('PLAID_COUNTRY_CODES', 'US').split(',');
+var PLAID_COUNTRY_CODES = envvar.string('PLAID_COUNTRY_CODES', 'GB,FR,ES,IE,NL').split(',');
 
 // Parameters used for the OAuth redirect Link flow.
 //
@@ -28,7 +28,7 @@ var PLAID_COUNTRY_CODES = envvar.string('PLAID_COUNTRY_CODES', 'US').split(',');
 // that the bank website should redirect to. You will need to configure
 // this redirect URI for your client ID through the Plaid developer dashboard
 // at https://dashboard.plaid.com/team/api.
-var PLAID_REDIRECT_URI = envvar.string('PLAID_REDIRECT_URI', '');
+var PLAID_REDIRECT_URI = envvar.string('PLAID_REDIRECT_URI', 'http://localhost:8000/oauth-response.html');
 
 // We store the access_token in memory - in production, store it in a secure
 // persistent data store
@@ -57,9 +57,9 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 app.use(bodyParser.json());
-
+app.set('view engine', 'pug');
 app.get('/', function(request, response, next) {
-  response.sendFile('./views/index.html', { root: __dirname });
+  response.render('index', { title: 'Hey', message: 'Hello there!'});
 });
 
 // This is an endpoint defined for the OAuth flow to redirect to.
@@ -100,6 +100,7 @@ app.post('/api/create_link_token', function(request, response, next) {
           error: error,
         });
       }
+      // response.render('start', { linkToken: createTokenResponse.link_token});
       response.json(createTokenResponse);
   })
 });
